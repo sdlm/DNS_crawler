@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 import re
+import traceback
 
 import scrapy
 
@@ -32,7 +33,12 @@ class DnsSpider(scrapy.Spider):
         if not is_catalog_page:
             text = response.css('span.count-products::text').extract_first()
             if text is not None:
-                count = int(re.match(r'(\d+)', text).group())
+                try:
+                    count = int(re.match(r'(\d+)', text).group())
+                except Exception:
+                    print(response)
+                    traceback.print_exc()
+                    return
                 for page_num in range(1, int(count/20.0) + 2):
                     url = response.urljoin(f'?p={page_num}&i=1')
                     yield scrapy.Request(url, callback=self.my_parse)

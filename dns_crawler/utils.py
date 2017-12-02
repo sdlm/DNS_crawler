@@ -1,3 +1,5 @@
+import datetime
+
 from pony.orm import db_session, commit
 
 from dns_crawler.items import DnsCrawlerItem
@@ -10,13 +12,18 @@ def add_item_to_db(item: DnsCrawlerItem):
         # check item already exists
         db_item = DnsItemModel.get(name=item['name'])
         if db_item is not None:
+            # add new price
+            # update opinions, comments count
             return
 
         # write item to DB
         DnsItemModel(
             name=item['name'],
-            price=item['price'],
+            # price=item['price'],
             opinions=item['opinions'],
             comments=item['comments'],
+            created=datetime.datetime.now()
         )
         commit()
+
+        # add price
