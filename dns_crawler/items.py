@@ -10,6 +10,7 @@ import scrapy
 
 class DnsCrawlerItem(scrapy.Item):
     name = scrapy.Field()
+    uuid = scrapy.Field()
     price = scrapy.Field()
     opinions = scrapy.Field()
     comments = scrapy.Field()

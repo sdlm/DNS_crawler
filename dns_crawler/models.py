@@ -2,14 +2,13 @@ from datetime import datetime
 from decimal import Decimal
 from pony.orm import *
 
-
 db = Database()
 
 
 class DnsItemModel(db.Entity):
     id = PrimaryKey(int, auto=True)
-    uuid = Optional(str)
-    name = Optional(str)
+    uuid = Required(str)
+    name = Required(str)
     opinions = Optional(int)
     comments = Optional(int)
     prices = Set('Price')
@@ -19,7 +18,7 @@ class DnsItemModel(db.Entity):
 class Price(db.Entity):
     id = PrimaryKey(int, auto=True)
     item = Required(DnsItemModel)
-    price = Optional(Decimal)
+    price = Required(Decimal)
     created = Optional(datetime)
 
 

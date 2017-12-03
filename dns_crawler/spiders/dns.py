@@ -50,6 +50,8 @@ class DnsSpider(scrapy.Spider):
 
     def parse_item(self, selector):
         title = selector.css('div.title a h3::text').extract_first()
+        if title is None:
+            return
         price = selector.css('div.price div.price_g span::attr(data-value)').extract_first()
         social = selector.css('div.social')
 
@@ -59,9 +61,13 @@ class DnsSpider(scrapy.Spider):
         tt = social.css('a.comments-count::text').extract_first()
         comments_count = int(tt[1:-2]) if tt else 0
 
+        link = selector.css('div.title a::attr(href)').extract_first()
+        uuid = re.match(r'/product/([\w\d]+)/.*', link).groups()[0]
+
         if title and price:
             return DnsCrawlerItem(
                 name=title,
+                uuid=uuid,
                 price=price,
                 opinions=opinions_count,
                 comments=comments_count,
